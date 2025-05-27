@@ -1,51 +1,47 @@
 #!/bin/bash
 
-# Created by Varrxy
+# Created by Varrxy (Modified for PipeWire + wpctl by ChatGPT)
 
-# Volume change amount
+# Volume change step
 VOLUME_CHANGE=5
+SOURCE="@DEFAULT_AUDIO_SOURCE@"
 
-# Function to get the default audio source
-get_default_source_name() {
-    pactl info | grep 'Default Source:' | awk -F': ' '{print $2}'
+# Function to get current mic volume as a plain integer (e.g. 42)
+get_volume() {
+    wpctl get-volume "$SOURCE" | awk '{print int($2 * 100)}'
 }
 
-# Get the default source name
-SOURCE_NAME=$(get_default_source_name)
-
-# Function to get current volume of the default source
-current_source_volume() {
-    pactl get-source-volume "$SOURCE_NAME" | awk '{print $5}' | sed 's/%//'
+# Function to check if mic is muted
+is_muted() {
+    wpctl get-volume "$SOURCE" | grep -q MUTED && echo "yes" || echo "no"
 }
 
-# Function to check current mute status of the default source
-current_source_mute() {
-    pactl get-source-mute "$SOURCE_NAME" | awk '{print $2}'
-}
-
-# Function to adjust the volume of the default source
-adjust_source_volume() {
-    local delta=$1
-    local new_volume=$(( $(current_source_volume) + delta ))
-
-    # Ensure volume is within the 0-100 range
-    if [ "$new_volume" -gt 100 ]; then
+# Function to clamp and set volume
+set_volume() {
+    local new_volume=$1
+    if (( new_volume > 100 )); then
         new_volume=100
-    elif [ "$new_volume" -lt 0 ]; then
+    elif (( new_volume < 0 )); then
         new_volume=0
     fi
-
-    pactl set-source-volume "$SOURCE_NAME" "${new_volume}%"
+    wpctl set-volume "$SOURCE" "${new_volume}%"
 }
 
-# Main action based on the argument
+# Main logic
 case "$1" in
-    --inc) adjust_source_volume "$VOLUME_CHANGE" ;;
-    --dec) adjust_source_volume -"$VOLUME_CHANGE" ;;
-    --toggle) pactl set-source-mute "$SOURCE_NAME" "$( [ "$(current_source_mute)" = "yes" ] && echo 0 || echo 1 )" ;;
-    *) 
+    --inc)
+        current=$(get_volume)
+        set_volume $((current + VOLUME_CHANGE))
+        ;;
+    --dec)
+        current=$(get_volume)
+        set_volume $((current - VOLUME_CHANGE))
+        ;;
+    --toggle)
+        wpctl set-mute "$SOURCE" toggle
+        ;;
+    *)
         echo "Usage: $0 --inc | --dec | --toggle"
-        exit 1 
+        exit 1
         ;;
 esac
-

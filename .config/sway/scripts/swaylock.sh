@@ -24,4 +24,3 @@ swaylock --ignore-empty-password --show-failed-attempts \
     --inside-ver-color "$COLOR_VER_IN" --ring-ver-color "$COLOR_VER_RING" \
     --inside-wrong-color "$COLOR_WRONG_IN" --ring-wrong-color "$COLOR_WRONG_RING" \
     --image "$WALLPAPER"
-
