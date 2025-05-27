@@ -3,8 +3,8 @@
 # Directory containing wallpapers
 WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
 
-# Use dmenu to select a wallpaper file
-selected=$(ls "$WALLPAPER_DIR" | dmenu -i -p "Select wallpaper:")
+# Use wofi to select a wallpaper file
+selected=$(ls "$WALLPAPER_DIR" | wofi --dmenu -i -p "Select wallpaper:")
 
 # If something is selected, set it as wallpaper using swaybg
 if [ -n "$selected" ]; then

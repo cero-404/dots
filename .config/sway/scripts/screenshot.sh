@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check dependencies
-for cmd in grim slurp wl-copy notify-send dmenu; do
+for cmd in grim slurp wl-copy notify-send wofi; do
     if ! command -v $cmd &> /dev/null; then
         notify-send "❌ Missing Dependency" "$cmd is not installed"
         exit 1
@@ -15,8 +15,8 @@ TIMESTAMP=$(date +'%Y%m%d-%H%M%S')
 FILENAME="screenshot-$TIMESTAMP.png"
 FILEPATH="$DIR/$FILENAME"
 
-# Show dmenu prompt
-CHOICE=$(printf "Fullscreen\nArea\nFullscreen (Clipboard)\nArea (Clipboard)" | dmenu -i -p "📸 Screenshot mode:")
+# Show wofi prompt
+CHOICE=$(printf "Fullscreen\nArea\nFullscreen (Clipboard)\nArea (Clipboard)" | wofi --dmenu -i -p "📸 Screenshot mode:")
 
 # Handle choice
 case "$CHOICE" in
