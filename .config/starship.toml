@@ -1,0 +1,144 @@
+# ~/.config/starship.toml
+
+add_newline = false
+
+format = """
+$os\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$cmd_duration\
+$line_break\
+$character"""
+
+[character]
+success_symbol = '[➜](bold green)'
+error_symbol = '[✗](bold red)'
+
+# Directory module config
+[directory]
+style = "cyan"
+truncation_length = 3
+truncation_symbol = "…"
+
+### Git Branch ###
+[git_branch]
+symbol = ' '
+truncation_length = 20
+truncation_symbol = '…'
+style = 'bold bright-purple'
+ignore_branches = ['master', 'main']
+
+### Git Commit ###
+[git_commit]
+commit_hash_length = 7
+style = 'bold bright-green'
+only_detached = true
+tag_disabled = false
+tag_symbol = ' '
+tag_max_candidates = 1
+
+### Git State ###
+[git_state]
+format = '[\($state( $progress_current/$progress_total)\)]($style) '
+rebase = ' REBASE'
+merge = ' MERGE'
+revert = ' REVERT'
+cherry_pick = ' PICK'
+bisect = ' BISECT'
+am = 'AM'
+am_or_rebase = 'AM/REBASE'
+style = 'bold yellow'
+
+### Git Metrics ###
+[git_metrics]
+disabled = false
+added_style = 'bold green'
+deleted_style = 'bold red'
+only_nonzero_diffs = true
+format = '[+$added]($added_style) [-$deleted]($deleted_style) '
+
+### Git Status ###
+[git_status]
+format = '([$all_status$ahead_behind]($style) )'
+style = 'bold red'
+staged = '++($count)'
+modified = ''
+deleted = ''
+untracked = ''
+stashed = ''
+ahead = '↑$count'
+behind = '↓$count'
+diverged = '⇅$ahead_count/$behind_count'
+conflicted = ''
+renamed = '»'
+up_to_date = ''
+
+# Language setup
+[python]
+symbol = ' '
+style = 'bold blue'
+format = 'via [${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+version_format = 'v${raw}'
+pyenv_version_name = true
+pyenv_prefix = ''
+python_binary = ['python3', 'python']
+detect_extensions = ['py', 'ipynb']
+detect_files = [
+  '.python-version',
+  'Pipfile',
+  '__init__.py',
+  'pyproject.toml',
+  'requirements.txt',
+  'setup.py',
+  'tox.ini'
+]
+detect_folders = []
+disabled = false
+
+[docker_context]
+# Show the current Docker context with a whale symbol 🐋
+format = 'via [🐋 $context]($style) '
+symbol = '🐳 '
+only_with_files = true
+detect_files = ['docker-compose.yml', 'docker-compose.yaml', 'Dockerfile']
+style = 'blue bold'
+disabled = false
+
+[cmd_duration]
+min_time = 1000
+format = '[ $duration]($style) '
+style = 'bold cyan'
+show_milliseconds = false 
+disabled = false
+
+[sudo]
+symbol = ' '
+style = 'bold blue'
+format = '[as $symbol]($style)'
+disabled = false
+allow_windows = false
+
+[os]
+disabled = false
+format = 'on [$symbol $name]($style) '
+style = 'bold red'
+
+[os.symbols]
+Debian = ""
+
+[package]
+# Show the package version with a box symbol 📦
+symbol = "📦 "
+# Format: "is 📦v1.0.0" (with the version formatted)
+format = 'is [$symbol$version]($style) '
+# Version formatting: show raw version prefixed by v (e.g. v1.2.3)
+version_format = "v${raw}"
+# Style: bold color 208 (a nice orange-ish)
+style = "bold 208"
+# Enable the package module
+disabled = false
+# Optionally show private packages' versions
+display_private = false
